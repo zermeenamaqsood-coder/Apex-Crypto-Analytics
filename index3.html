@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoNexus Dashboard</title>
+    <style>
+        body { background-color: #0b0f19; color: white; font-family: system-ui, sans-serif; margin: 0; padding: 2rem; display: flex; justify-content: center; }
+        .container { max-width: 1200px; w-full: 100%; width: 100%; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #1e293b; padding-bottom: 1rem; }
+        .logo-area { display: flex; align-items: center; gap: 0.5rem; font-weight: bold; font-size: 1.25rem; color: #10b981; }
+        .nav-links { display: flex; gap: 1.5rem; color: #94a3b8; font-size: 0.9rem; }
+        .nav-active { color: white; font-weight: 500; }
+        .status-badge { background-color: #064e3b; color: #34d399; font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 500; }
+        .grid-layout { display: grid; grid-template-cols: 1fr; gap: 1.5rem; }
+        @media (min-width: 768px) { .grid-layout { grid-template-columns: 2fr 1fr; } }
+        .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 1rem; padding: 1.5rem; }
+        .card-title { color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .price-text { font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem; font-family: monospace; }
+        .change-positive { color: #10b981; font-size: 0.85rem; font-weight: 500; }
+        .table-container { margin-top: 2rem; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { color: #64748b; font-size: 0.85rem; padding: 0.75rem 1rem; border-bottom: 1px solid #1f2937; }
+        td { padding: 1rem; border-bottom: 1px solid #1f2937; font-size: 0.95rem; }
+        .coin-name { font-weight: 600; }
+        .btn-update { background-color: #10b981; color: #0b0f19; font-weight: bold; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: 0.2s; }
+        .btn-update:hover { background-color: #059669; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Navbar Layout -->
+        <div class="navbar">
+            <div class="logo-area">
+                <div style="background-color: #10b981; width: 24px; height: 24px; border-radius: 6px;"></div>
+                Halcyon Live
+            </div>
+            <div class="nav-links">
+                <span class="nav-active">Overview</span>
+                <span>Markets</span>
+                <span>Portfolio</span>
+            </div>
+            <div class="status-badge">● Live Simulation Active</div>
+        </div>
+
+        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Market Overview</h1>
+        <p style="color: #64748b; margin-bottom: 2rem; margin-top: 0;">Simulated local performance across top assets.</p>
+
+        <!-- Main Dashboard Cards Grid -->
+        <div class="grid-layout">
+            <div class="card">
+                <div class="card-title">Bitcoin Price (USD)</div>
+                <div id="btc-price" class="price-text">$81,980.00</div>
+                <div class="change-positive">↑ +1.15% (24h)</div>
+            </div>
+            
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div class="card-title">Portfolio Balance</div>
+                    <div class="price-text">$115.53B</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                    <span style="color: #64748b; font-size: 0.85rem;">Total Tracked Assets: <strong style="color: white;">5</strong></span>
+                    <button id="refresh-btn" class="btn-update">Simulate Refresh</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulated Data Asset Table -->
+        <div class="card table-container">
+            <div class="card-title" style="margin-bottom: 1rem;">Top Digital Assets</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Price</th>
+                        <th>24h Change</th>
+                        <th>Market Cap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="coin-name">Bitcoin (BTC)</td>
+                        <td>$81,980.00</td>
+                        <td style="color: #10b981;">+1.15%</td>
+                        <td>$1.62T</td>
+                    </tr>
+                    <tr>
+                        <td class="coin-name">Ethereum (ETH)</td>
+                        <td>$2,395.70</td>
+                        <td style="color: #10b981;">+0.88%</td>
+                        <td>$288.4B</td>
+                    </tr>
+                    <tr>
+                        <td class="coin-name">Binance Coin (BNB)</td>
+                        <td>$725.40</td>
+                        <td style="color: #10b981;">+1.98%</td>
+                        <td>$105.1B</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript Data Processing Brain -->
+    <script>
+        const btcPriceDisplay = document.getElementById('btc-price');
+        const refreshButton = document.getElementById('refresh-btn');
+
+        // Local array to simulate slight fluctuations when clicked
+        const mockPrices = ["$81,980.00", "$82,105.50", "$81,850.25", "$82,340.00"];
+        let counter = 0;
+
+        refreshButton.addEventListener('click', () => {
+            btcPriceDisplay.innerText = "⚡ Syncing...";
+            setTimeout(() => {
+                counter = (counter + 1) % mockPrices.length;
+                btcPriceDisplay.innerText = mockPrices[counter];
+            }, 400);
+        });
+    </script>
+
+</body>
+</html>
+
+
+
